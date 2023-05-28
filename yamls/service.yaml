@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: predict-service
+spec:
+  selector:
+    app: predictApp
+  type: NodePort
+  ports: 
+    - protocol: TCP
+      port: 3001
+      targetPort: 3000
+      
+          
+  

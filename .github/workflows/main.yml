@@ -1,0 +1,50 @@
+name: PredictCI
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+jobs:
+  docker-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install require packages
+      run: sudo apt-get install -f shellcheck
+
+    - name: Run shell check
+      run: |
+        pushd ./      
+        make shellcheck
+        popd
+    - name: Run Docker check
+      run: |
+        pushd ./      
+        make docker-lint
+        popd    
+  build:
+    runs-on: ubuntu-latest
+    needs: docker-test
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: build docker-image
+      run: |
+        pushd ./
+        make build-image
+        popd
+    - name: Login to Dockerhub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}     
+    - name: push docker-image
+      run: |
+        pushd ./
+        make push-image
+        popd
