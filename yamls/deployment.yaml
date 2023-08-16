@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: predict-container
-          image: imilabremodeling/ilatc
+          image: imilabremodeling/laser
           command: ["/bin/sh"]
           args: ["-c", "while true; do python3 /home/jovyan/predict-code/inference.py;sleep 10;done"]
           ports: 
